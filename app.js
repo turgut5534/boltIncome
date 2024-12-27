@@ -26,6 +26,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use('/static', express.static('node_modules/izitoast/dist'));
+app.use('/static', express.static('node_modules/sweetalert2/dist'));
 
 app.get('/', auth, async(req,res) => {
 
@@ -69,9 +70,13 @@ app.post('/users/save', async(req,res) => {
             })
         }
 
-        const count = await User.count();
+        const user = await User.findOne({
+            where: {
+                email: email
+            }
+        })
 
-        if(count > 0) {
+        if(user) {
             return res.status(400).json({
                 message: 'There is already a user exists with these credentials'
             })
@@ -140,9 +145,15 @@ app.post('/get-income', auth, async(req,res) => {
     
     try {
         const username = 'turgutsalgin3455@gmail.com'
-        const password = 'B@ck3nd!123'
+        const password = req.body.password
 
         const allData = await automate(username,password)
+
+        if(!allData) {
+            return res.status(404).json({
+                message: 'Incorrect password'
+            })
+        }
     
         for (const data of allData) {
 

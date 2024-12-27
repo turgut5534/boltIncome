@@ -6,6 +6,7 @@
   <title>Weekly Income Tracker</title>
   <link rel="stylesheet" href="/css/index.css">
   <link rel="stylesheet" href="/static/css/iziToast.min.css">
+  <link rel="stylesheet" href="/static/sweetalert2.min.css">
 </head>
 <body>
   <div class="container">
@@ -16,6 +17,7 @@
     <div class="income-box">
       <h2><%= user.firstName%> <%= user.lastName%></h2>
       <button type="button" id="fetch-income">Update</button>
+      <a href="/add-income" id="manual-button">Add Manual</a>
     </div>
 
     <div class="income-history">
@@ -56,6 +58,7 @@
     </footer>
   </div>
   <script src="/static/js/iziToast.min.js"></script>
+  <script src="/static/sweetalert2.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <script src="/js/index.js"></script>
 </body>
