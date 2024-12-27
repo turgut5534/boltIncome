@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weekly Income Tracker</title>
+  <link rel="stylesheet" href="/css/index.css">
+  <link rel="stylesheet" href="/static/css/iziToast.min.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Bolt Income Tracker</h1>
+    </header>
+    
+    <div class="income-box">
+      <h2><%= user.firstName%> <%= user.lastName%></h2>
+      <button type="button" id="fetch-income">Update</button>
+    </div>
+
+    <div class="income-history">
+      <h3>Previous Week's Income</h3>
+      <table id="incomeHistory">
+        <thead>
+          <tr>
+            <th>Week</th>
+            <th>Income</th>
+            <th>After Promin</th>
+            <th>PDF Download</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if(incomes.length > 0) { %>
+            <% incomes.forEach((income) => { %>
+              <tr class="<%= income.id %>">
+                <td><%= income.week %></td>
+                <td><%= income.price %> PLN</td>
+                <td><%= income.net_price || 'Not Available' %> PLN</td> <!-- Add Net Income -->
+                <td>
+                  <a href="/<%=income.file%>" target="_blank">Download PDF</a>
+                </td>
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <tr>
+              <td colspan="4">You have no incomes</td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+    
+    
+    <footer>
+      <p>Developed by Turgut Salgın</p>
+    </footer>
+  </div>
+  <script src="/static/js/iziToast.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="/js/index.js"></script>
+</body>
+</html>
