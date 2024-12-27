@@ -27,7 +27,6 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 app.use('/static', express.static('node_modules/izitoast/dist'));
 
-
 app.get('/', auth, async(req,res) => {
 
     try {
