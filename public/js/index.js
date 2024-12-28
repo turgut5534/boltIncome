@@ -70,6 +70,12 @@ $(document).ready(function () {
                 const formattedTo = formatDateToDot(response.to)
                 const formattedFrom = formatDateToDot(response.from)
 
+                var zus = 'NO';
+
+                if(response.has_zus) {
+                    zus= 'YES'
+                }
+
                 $('.incomes').append(`<tr id="income-${response.id}">
                 <td>
                   ${formattedTo}
@@ -80,9 +86,7 @@ $(document).ready(function () {
                 <td>${response.cash} PLN</td>
                 <td>${response.price} PLN</td>
                 <td>${response.net_price} PLN</td>
-                <td>
-                    No file found
-                </td>
+                <td class="text-danger">${zus}</td>
                 <td>
                   <button type="button" data-id="${response.id}" data-from="${response.from}" data-to="${response.to}" data-price="${response.price}" class="btn btn-primary my-2 edit-income">Edit</button>
                   <button type="button" data-id="${response.id}" class="btn btn-danger delete-button" data-bs-whatever="@mdo">Delete</button>

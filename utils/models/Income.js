@@ -35,6 +35,10 @@ const Income = sequelize.define('Income', {
         type: DataTypes.STRING, // Use FLOAT for decimal values
         allowNull: true
     },
+    has_zus: {
+        type: DataTypes.BOOLEAN, // Use FLOAT for decimal values
+        allowNull: true
+    }
 });
 
 // Sync the model with the database (this will create the table if it doesn't exist)

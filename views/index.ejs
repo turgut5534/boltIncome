@@ -14,7 +14,7 @@
 
     <div class="income-history">
       <h3 class="text-center mb-3">Income List</h3>
-      <table id="incomeHistory">
+      <table id="incomeHistory" class="table table-bordered">
         <thead>
           <tr>
             <th>Week</th>
@@ -22,7 +22,7 @@
             <th><i class="fa-solid fa-dollar-sign text-success"></i> Cash</th>
             <th><i class="fa-regular fa-credit-card"></i> In App</th>
             <th>To Santander</th>
-            <th>PDF Download</th>
+            <th>ZUS</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -47,13 +47,7 @@
                 <td class="text-success"><%= income.cash %> PLN</td>
                 <td class="text-danger"><%= income.price %> PLN</td>
                 <td><%= income.net_price || 'Not Available' %> PLN</td> <!-- Add Net Income -->
-                <td>
-                  <% if(income.file) {%>
-                    <a href="/<%=income.file%>" target="_blank">Download PDF</a>
-                  <% } else {%>
-                    No file found
-                  <% }%>
-                </td>
+                <td class="text-danger"><% if(income.has_zus){%> YES<% }else{ %> NO <%}%></td>
                 <td>
                   <button type="button" data-id="<%=income.id%>" data-from="<%=income.from%>" data-to="<%=income.to%>" data-cash="<%=income.cash%>" data-price="<%=income.price%>" class="btn btn-primary my-2 edit-income">Edit</button>
                   <button type="button" data-id="<%=income.id%>" class="btn btn-danger delete-button" data-bs-whatever="@mdo">Delete</button>
@@ -95,6 +89,13 @@
                     <label for="message-text" class="col-form-label">In App:</label>
                     <input required type="number" name="price" class="form-control" step="0.01" min="0">
                   </div>
+
+                  <div class="mb-3 form-check">
+                    <input type="checkbox" name="zus" class="form-check-input" id="priceCheckbox">
+                    <label for="priceCheckbox" class="form-check-label">I have ZUS</label>
+                  </div>
+                  
+                  
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

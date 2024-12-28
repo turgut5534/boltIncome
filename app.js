@@ -118,7 +118,7 @@ app.post('/users/update', auth, async(req,res) => {
     
     try {
 
-        const { firstName, lastName, email, password, repassword } = req.body
+        const { firstName, lastName, email, password, repassword, age } = req.body
 
         if(validator.isEmpty(firstName) || validator.isEmpty(lastName) ||validator.isEmpty(email) ) {
             return res.status(400).json({
@@ -148,6 +148,9 @@ app.post('/users/update', auth, async(req,res) => {
             user.password = hashedPassword
         }
 
+        if(age) {
+            user.age= age
+        }
         user.firstName = firstName
         user.lastName = lastName
         user.email = email
@@ -296,7 +299,7 @@ app.post('/income/update', auth, async(req,res) => {
 app.post('/income/save', auth, async(req,res) => {
 
     try {
-        const {from, to, cash, price} = req.body
+        const {from, to, cash, price, zus} = req.body
 
         if(validator.isEmpty(from) || validator.isEmpty(to) ||validator.isEmpty(price) ) {
             return res.status(400).json({
@@ -337,6 +340,17 @@ app.post('/income/save', auth, async(req,res) => {
         }
 
         const total = parseFloat(price)+ parseFloat(cash)
+        var net_price = parseFloat(price)-170
+        var has_zus = false
+
+        if (zus) {
+            has_zus = true
+            if(req.user.age && req.user.age >=26) {
+                net_price -= 179.95
+            }else {
+                net_price -= 145.95
+            }
+        }
 
         const newIncome = await Income.create({
             user_id: req.user.id,
@@ -345,7 +359,8 @@ app.post('/income/save', auth, async(req,res) => {
             price: price,
             cash: cash,
             total:total,
-            net_price:parseFloat(price)-170
+            net_price:net_price,
+            has_zus: has_zus
         })
         
         res.send(newIncome)
