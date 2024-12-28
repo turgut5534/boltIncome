@@ -61,7 +61,6 @@ $(document).ready(function () {
 
         e.preventDefault()
     
-
         $.ajax({
             url: '/income/save',
             type: 'POST',
@@ -190,7 +189,14 @@ $(document).ready(function () {
         return `${year}-${month}-${day}`;
     }
     
-
+    $(document).on('change', '.from-date', function(){
+        
+        const selectedDate = $(this).val();
+        const newDate = new Date(selectedDate);
+        newDate.setDate(newDate.getDate() + 6);
+        const formattedNewDate = formatDate(newDate);
+        $('.to-date').val(formattedNewDate);
+    })
     
 });
 
