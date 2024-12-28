@@ -207,7 +207,18 @@ $(document).ready(function () {
             type: 'POST',
             data: $(this).serialize(),
             success: function(response) {
-                window.location.reload()
+
+                $('#firstName').text(response.user.firstName);
+                $('#lastName').text(response.user.lastName);
+                $('#email').text(response.user.email);
+
+                $('#password').val('');
+                $('#repassword').val('');
+
+                iziToast.success({
+                    title: 'Success',
+                    message: response.message,
+                });
             },
             error: function(xhr, status, error) {
                 const response = JSON.parse(xhr.responseText);

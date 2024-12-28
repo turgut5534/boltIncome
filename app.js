@@ -116,7 +116,7 @@ app.post('/users/update', auth, async(req,res) => {
     
     try {
 
-        const { firstName, lastName, email, password } = req.body
+        const { firstName, lastName, email, password, repassword } = req.body
 
         if(validator.isEmpty(firstName) || validator.isEmpty(lastName) ||validator.isEmpty(email) ) {
             return res.status(400).json({
@@ -133,6 +133,15 @@ app.post('/users/update', auth, async(req,res) => {
         }
 
         if(password) {
+
+            const isMatch = password.trim() === repassword.trim()
+
+            if(!isMatch) {
+                return res.status(400).json({
+                    message: 'Password does not match'
+                })
+            }
+
             const hashedPassword = await bcrypt.hash(password, 10)
             user.password = hashedPassword
         }
@@ -143,7 +152,10 @@ app.post('/users/update', auth, async(req,res) => {
 
         await user.save()
 
-        res.status(200).send()
+        res.status(200).json({
+            user,
+            message: 'Successfully updated!'
+        })
 
 
     } catch(e) {
