@@ -1,24 +1,36 @@
+/* Prevent horizontal scroll on the entire page */
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f7fa;
+  overflow-x: hidden; /* Disable horizontal scroll */
   margin: 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  width: 100vw; /* Ensure body stays within viewport width */
+  box-sizing: border-box; /* Include padding and borders in the element's total width */
 }
 
+/* Ensure the container doesn't overflow */
 .container {
-  width: 80%;
-  max-width: 1200px;
-  margin-top: 30px;
-  padding: 20px;
-  background-color: #fff;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 100%; /* Prevent the container from overflowing */
+  max-width: 100vw; /* Prevent the container from expanding beyond the viewport */
+  overflow: hidden; /* Prevent overflow within the container */
+}
+
+/* Income History Section */
+.income-history {
+  overflow-x: auto; /* Horizontal scroll for the table */
+  -webkit-overflow-scrolling: touch; /* Enable smooth scrolling on mobile */
+  margin-bottom: 1em; /* Optional: Add some space below the table */
+}
+
+/* Make table fully responsive within the container */
+#incomeHistory {
+  width: 100%;
+  min-width: 600px; /* Ensure table is wide enough for content but doesn't overflow */
+  table-layout: auto; /* Allow table to expand based on content */
 }
 
 /* Header Styles */
 header {
+  margin-top: 2rem;
   text-align: center;
   margin-bottom: 30px;
 }
@@ -61,43 +73,8 @@ header h1 {
   transition: background-color 0.3s ease;
 }
 
-
 #fetch-income:hover {
   background-color: #0056b3;
-}
-
-/* Income History Table */
-.income-history h3 {
-  font-size: 28px;
-  margin-bottom: 20px;
-  color: #444;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-}
-
-table th,
-table td {
-  padding: 12px 15px;
-  text-align: center;
-  border-bottom: 1px solid #ddd;
-}
-
-table th {
-  background-color: #f8f9fa;
-  color: #333;
-  font-weight: bold;
-}
-
-table tr:nth-child(even) {
-  background-color: #f9f9f9;
-}
-
-table tr:hover {
-  background-color: #e2e6ea;
 }
 
 /* Footer Styles */
@@ -114,10 +91,6 @@ footer p {
 
 /* Responsive Styles */
 @media (max-width: 768px) {
-  .container {
-    width: 90%;
-  }
-
   header h1 {
     font-size: 28px;
   }
@@ -134,5 +107,16 @@ footer p {
   #fetch-income {
     font-size: 14px;
     padding: 8px 16px;
+  }
+
+  .income-history {
+    padding-left: 10px; /* Optional: Add some padding for small screens */
+    padding-right: 10px; /* Optional: Add some padding for small screens */
+  }
+
+  /* Optional: Ensure body content doesn't overflow */
+  .container {
+    max-width: 100%;
+    overflow: hidden;
   }
 }

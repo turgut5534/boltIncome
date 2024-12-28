@@ -10,8 +10,11 @@ $('#loginForm').on('submit', function(e){
             window.location.href = '/'
         },
         error: function(xhr, status, error) {
-            console.error('Error:', error);
-            alert('An error occurred. Please try again.');
+            const response = JSON.parse(xhr.responseText);
+            iziToast.error({
+                title: 'Error',
+                message: response.message,
+            });
         }
     })
 

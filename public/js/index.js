@@ -198,6 +198,27 @@ $(document).ready(function () {
         $('.to-date').val(formattedNewDate);
     })
     
+    $('#user-update-form').on('submit', function(e) {
+
+        e.preventDefault()
+
+        $.ajax({
+            url: '/users/update',
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function(response) {
+                window.location.reload()
+            },
+            error: function(xhr, status, error) {
+                const response = JSON.parse(xhr.responseText);
+                iziToast.error({
+                    title: 'Error',
+                    message: response.message,
+                });
+            }
+        });
+
+    })
 });
 
 

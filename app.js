@@ -47,6 +47,16 @@ app.get('/', auth, async(req,res) => {
 
 })
 
+app.get('/profile', auth, async(req,res) => {
+
+    try {
+        res.render('profile', {user: req.user})
+    } catch(e) {
+        console.log(e)
+    }
+
+})
+
 app.get('/login', (req,res) =>  {
 
     res.render('login')
@@ -93,6 +103,45 @@ app.post('/users/save', async(req,res) => {
             password:hashedPassword,
             has_zus: has_zus
         })
+
+        res.status(200).send()
+
+
+    } catch(e) {
+        console.log(e)
+    }
+})
+
+app.post('/users/update', auth, async(req,res) => {
+    
+    try {
+
+        const { firstName, lastName, email, password } = req.body
+
+        if(validator.isEmpty(firstName) || validator.isEmpty(lastName) ||validator.isEmpty(email) ) {
+            return res.status(400).json({
+                message: 'First Name, Last Name, and Email are required.'
+            });
+        }
+
+        const user = await User.findByPk(req.user.id)
+        
+        if(!user) {
+            return res.status(400).json({
+                message: 'You need to log in again'
+            })
+        }
+
+        if(password) {
+            const hashedPassword = await bcrypt.hash(password, 10)
+            user.password = hashedPassword
+        }
+
+        user.firstName = firstName
+        user.lastName = lastName
+        user.email = email
+
+        await user.save()
 
         res.status(200).send()
 
