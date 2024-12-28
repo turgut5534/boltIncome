@@ -34,13 +34,14 @@ app.get('/', auth, async(req,res) => {
 
     try {
 
+        title= 'Bolt Income Tracker'
         const incomes = await Income.findAll({
             where: {
                 user_id: req.user.id
             }
         })
 
-        res.render('index', {user: req.user,incomes})
+        res.render('index', {user: req.user,incomes, title})
     } catch(e) {
         console.log(e)
     }
@@ -49,8 +50,9 @@ app.get('/', auth, async(req,res) => {
 
 app.get('/profile', auth, async(req,res) => {
 
+    const title = 'Profile'
     try {
-        res.render('profile', {user: req.user})
+        res.render('profile', {user: req.user, title})
     } catch(e) {
         console.log(e)
     }
