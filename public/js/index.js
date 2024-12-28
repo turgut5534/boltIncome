@@ -76,6 +76,8 @@ $(document).ready(function () {
                   -
                   ${formattedFrom}
                 </td>
+                <td>${response.total} PLN</td>
+                <td>${response.cash} PLN</td>
                 <td>${response.price} PLN</td>
                 <td>${response.net_price} PLN</td>
                 <td>
@@ -166,6 +168,7 @@ $(document).ready(function () {
         // Get raw data from attributes
         const fromRaw = $(this).data('from');
         const toRaw = $(this).data('to');
+        const cash = $(this).data('cash');
         const price = $(this).data('price');
         const id = $(this).data('id');
     
@@ -175,6 +178,7 @@ $(document).ready(function () {
     
         $('.edit-from').val(from);
         $('.edit-to').val(to);
+        $('.edit-cash').val(cash);
         $('.edit-price').val(price);
         $('.update-income-id').val(id)
     

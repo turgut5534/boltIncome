@@ -10,6 +10,15 @@ const Income = sequelize.define('Income', {
         type: DataTypes.FLOAT, // Use FLOAT for decimal values
         allowNull: false
     },
+    cash: {
+        type: DataTypes.FLOAT, // Use FLOAT for decimal values
+        allowNull: false
+    },
+    total: {
+        type: DataTypes.FLOAT, // Use FLOAT for decimal values
+        allowNull: false
+    },
+    
     net_price: {
         type: DataTypes.FLOAT, // Use FLOAT for decimal values
         allowNull: false

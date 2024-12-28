@@ -18,8 +18,10 @@
         <thead>
           <tr>
             <th>Week</th>
-            <th>Income</th>
-            <th>After Promin</th>
+            <th>Total</th>
+            <th>Cash</th>
+            <th>In App</th>
+            <th>To Santander</th>
             <th>PDF Download</th>
             <th>Action</th>
           </tr>
@@ -41,6 +43,8 @@
                     year: 'numeric'
                   }) %>
                 </td>
+                <td><%= income.total %> PLN</td>
+                <td><%= income.cash %> PLN</td>
                 <td><%= income.price %> PLN</td>
                 <td><%= income.net_price || 'Not Available' %> PLN</td> <!-- Add Net Income -->
                 <td>
@@ -51,7 +55,7 @@
                   <% }%>
                 </td>
                 <td>
-                  <button type="button" data-id="<%=income.id%>" data-from="<%=income.from%>" data-to="<%=income.to%>" data-price="<%=income.price%>" class="btn btn-primary my-2 edit-income">Edit</button>
+                  <button type="button" data-id="<%=income.id%>" data-from="<%=income.from%>" data-to="<%=income.to%>" data-cash="<%=income.cash%>" data-price="<%=income.price%>" class="btn btn-primary my-2 edit-income">Edit</button>
                   <button type="button" data-id="<%=income.id%>" class="btn btn-danger delete-button" data-bs-whatever="@mdo">Delete</button>
                 </td>
               </tr>
@@ -84,8 +88,12 @@
                     <input required type="date" name="to" class="form-control to-date">
                   </div>
                   <div class="mb-3">
-                    <label for="message-text" class="col-form-label">Price:</label>
-                    <input required type="number" name="price" class="form-control" id="recipient-name" step="0.01" min="0">
+                    <label for="message-text" class="col-form-label">Cash:</label>
+                    <input required type="number" name="cash" class="form-control" step="0.01" min="0">
+                  </div>
+                  <div class="mb-3">
+                    <label for="message-text" class="col-form-label">In App:</label>
+                    <input required type="number" name="price" class="form-control" step="0.01" min="0">
                   </div>
                 </div>
                 <div class="modal-footer">
@@ -116,7 +124,11 @@
                     <input required type="date" name="to" class="form-control edit-to">
                   </div>
                   <div class="mb-3">
-                    <label for="message-text" class="col-form-label">Price:</label>
+                    <label for="message-text" class="col-form-label">Cash:</label>
+                    <input required type="number" name="cash" class="form-control edit-cash" step="0.01" min="0">
+                  </div>
+                  <div class="mb-3">
+                    <label for="message-text" class="col-form-label">In App:</label>
                     <input required type="number" name="price" class="form-control edit-price" step="0.01" min="0">
                   </div>
                 </div>

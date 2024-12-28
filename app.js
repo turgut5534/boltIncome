@@ -252,7 +252,7 @@ app.post('/income/update', auth, async(req,res) => {
 
     try {
 
-        const { id, from, to, price} = req.body
+        const { id, from, to, cash, price} = req.body
             
         const existingIncome = await Income.findByPk(id)
 
@@ -271,7 +271,9 @@ app.post('/income/update', auth, async(req,res) => {
             });
         }
 
+        existingIncome.cash= cash
         existingIncome.price = price
+        existingIncome.total = parseFloat(cash)+ parseFloat(price)
         existingIncome.from = from
         existingIncome.to = to
         existingIncome.net_price = parseFloat(price)-170
@@ -292,7 +294,7 @@ app.post('/income/update', auth, async(req,res) => {
 app.post('/income/save', auth, async(req,res) => {
 
     try {
-        const {from, to, price} = req.body
+        const {from, to, cash, price} = req.body
 
         if(validator.isEmpty(from) || validator.isEmpty(to) ||validator.isEmpty(price) ) {
             return res.status(400).json({
@@ -331,11 +333,16 @@ app.post('/income/save', auth, async(req,res) => {
                 message: 'You already have an income between those dates'
             });
         }
+
+        const total = parseFloat(price)+ parseFloat(cash)
+
         const newIncome = await Income.create({
             user_id: req.user.id,
             from: from,
             to:to,
             price: price,
+            cash: cash,
+            total:total,
             net_price:parseFloat(price)-170
         })
         
