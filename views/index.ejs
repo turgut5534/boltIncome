@@ -13,14 +13,14 @@
     </div>
 
     <div class="income-history">
-      <h3>Previous Week's Income</h3>
+      <h3 class="text-center mb-3">Income List</h3>
       <table id="incomeHistory">
         <thead>
           <tr>
             <th>Week</th>
             <th>Total</th>
-            <th>Cash</th>
-            <th>In App</th>
+            <th><i class="fa-solid fa-dollar-sign text-success"></i> Cash</th>
+            <th><i class="fa-regular fa-credit-card"></i> In App</th>
             <th>To Santander</th>
             <th>PDF Download</th>
             <th>Action</th>
@@ -43,9 +43,9 @@
                     year: 'numeric'
                   }) %>
                 </td>
-                <td><%= income.total %> PLN</td>
-                <td><%= income.cash %> PLN</td>
-                <td><%= income.price %> PLN</td>
+                <td class="text-primary"><%= income.total %> PLN</td>
+                <td class="text-success"><%= income.cash %> PLN</td>
+                <td class="text-danger"><%= income.price %> PLN</td>
                 <td><%= income.net_price || 'Not Available' %> PLN</td> <!-- Add Net Income -->
                 <td>
                   <% if(income.file) {%>
