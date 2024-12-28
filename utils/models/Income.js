@@ -14,8 +14,12 @@ const Income = sequelize.define('Income', {
         type: DataTypes.FLOAT, // Use FLOAT for decimal values
         allowNull: false
     },
-    week: {
-        type: DataTypes.STRING, // Use FLOAT for decimal values
+    from: {
+        type: DataTypes.DATE, // Use FLOAT for decimal values
+        allowNull: false
+    },
+    to: {
+        type: DataTypes.DATE, // Use FLOAT for decimal values
         allowNull: false
     },
     file: {

@@ -138,7 +138,8 @@ async function automateBoltLogin(username,password) {
 
                 const data = {
                     price : 0,
-                    week : '',
+                    from :null,
+                    to: null,
                     net_price:0,
                     file: ''
                 }

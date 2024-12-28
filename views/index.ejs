@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="/css/index.css">
   <link rel="stylesheet" href="/static/css/iziToast.min.css">
   <link rel="stylesheet" href="/static/sweetalert2.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 <body>
   <div class="container">
@@ -17,7 +18,7 @@
     <div class="income-box">
       <h2><%= user.firstName%> <%= user.lastName%></h2>
       <button type="button" id="fetch-income">Update</button>
-      <a href="/add-income" id="manual-button">Add Manual</a>
+      <button type="button" id="manual-button" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Add Manual</button>
     </div>
 
     <div class="income-history">
@@ -29,17 +30,40 @@
             <th>Income</th>
             <th>After Promin</th>
             <th>PDF Download</th>
+            <th>Action</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody class="incomes">
           <% if(incomes.length > 0) { %>
             <% incomes.forEach((income) => { %>
-              <tr class="<%= income.id %>">
-                <td><%= income.week %></td>
+              <tr id="income-<%= income.id %>">
+                <td>
+                  <%= new Date(income.from).toLocaleDateString('pl-PL', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                  }) %>
+                  -
+                  <%= new Date(income.to).toLocaleDateString('pl-PL', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                  }) %>
+                </td>
+                
                 <td><%= income.price %> PLN</td>
                 <td><%= income.net_price || 'Not Available' %> PLN</td> <!-- Add Net Income -->
                 <td>
-                  <a href="/<%=income.file%>" target="_blank">Download PDF</a>
+                  <% if(income.file) {%>
+                    <a href="/<%=income.file%>" target="_blank">Download PDF</a>
+                  <% }else{%>
+                    No file found
+                  <% }%>
+                  
+                </td>
+                <td>
+                  <button type="button" data-id="<%=income.id%>" data-from="<%=income.from%>" data-to="<%=income.to%>" data-price="<%=income.price%>" class="btn btn-primary my-2 edit-income">Edit</button>
+                  <button type="button" data-id="<%=income.id%>" class="btn btn-danger delete-button" data-bs-whatever="@mdo">Delete</button>
                 </td>
               </tr>
             <% }) %>
@@ -55,11 +79,83 @@
     
     <footer>
       <p>Developed by Turgut Salgın</p>
+
+      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <form id="manual-add-form">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">New Income</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+             
+                <div class="mb-3">
+                  <label for="recipient-name" class="col-form-label">From:</label>
+                  <input required type="date" name="from" class="form-control" id="recipient-name">
+                </div>
+                <div class="mb-3">
+                  <label for="recipient-name" class="col-form-label">To:</label>
+                  <input required type="date" name="to" class="form-control" id="recipient-name">
+                </div>
+                <div class="mb-3">
+                  <label for="message-text" class="col-form-label">Price:</label>
+                  <input required type="number" name="price" class="form-control" id="recipient-name" step="0.01" min="0">
+
+                </div>
+             
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+          </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal fade" id="editIncomeModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <form id="manual-update-form">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Edit Income</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+             
+                <div class="mb-3">
+                  <label for="recipient-name" class="col-form-label">From:</label>
+                  <input required type="date" name="from" class="form-control edit-from" >
+                </div>
+                <div class="mb-3">
+                  <label for="recipient-name" class="col-form-label">To:</label>
+                  <input required type="date" name="to" class="form-control edit-to">
+                </div>
+                <div class="mb-3">
+                  <label for="message-text" class="col-form-label">Price:</label>
+                  <input required type="number" name="price" class="form-control edit-price" step="0.01" min="0">
+
+                </div>
+             
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Update</button>
+              <input class="update-income-id" type="hidden" name="id">
+            </div>
+          </form>
+          </div>
+        </div>
+      </div>
+
     </footer>
   </div>
   <script src="/static/js/iziToast.min.js"></script>
   <script src="/static/sweetalert2.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
   <script src="/js/index.js"></script>
+  
 </body>
 </html>

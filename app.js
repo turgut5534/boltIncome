@@ -6,7 +6,9 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const auth = require('./utils/middlewares/auth')
 const automate = require('./utils/helpers/fetchIncome')
+const validator = require('validator')
 require('dotenv')
+const { Op } = require('sequelize');
 
 const User = require('./utils/models/User')
 const Income = require('./utils/models/Income')
@@ -124,7 +126,7 @@ app.post('/login', async(req,res) => {
         const token = jwt.sign(
             { userId: user.id, email: user.email }, // Payload (user data you want to encode)
             process.env.SECRET_KEY, // Secret key
-            { expiresIn: '1h' } // Token expiration time (optional)
+            { expiresIn: '12h' } // Token expiration time (optional)
         );
 
         res.cookie('token', token, {httpOnly:true})
@@ -183,6 +185,136 @@ app.post('/get-income', auth, async(req,res) => {
     }
 
 })
+
+
+app.post('/income/update', auth, async(req,res) => {
+
+    try {
+
+        const { id, from, to, price} = req.body
+            
+        const existingIncome = await Income.findByPk(id)
+
+        const fromDate = new Date(from);
+        const toDate = new Date(to);
+
+        if (toDate <= fromDate) {
+            return res.status(400).json({
+                message: "'To' date must be greater than 'From' date."
+            });
+        }
+
+        if(!existingIncome) {
+            return res.status(404).json({
+                message: 'Income record not found'
+            });
+        }
+
+        existingIncome.price = price
+        existingIncome.from = from
+        existingIncome.to = to
+        existingIncome.net_price = parseFloat(price)-170
+
+        await existingIncome.save()
+        
+        res.send(existingIncome)
+
+    } catch(e) {
+        console.log(e)
+        return res.status(404).json({
+            message: 'An error occurred'
+        })
+    }
+
+})
+
+app.post('/income/save', auth, async(req,res) => {
+
+    try {
+        const {from, to, price} = req.body
+
+        if(validator.isEmpty(from) || validator.isEmpty(to) ||validator.isEmpty(price) ) {
+            return res.status(400).json({
+                message: 'All fields are required. Please provide valid from, to, and price values.'
+            });
+        }
+            
+        // Convert dates to a comparable format
+        const fromDate = new Date(from);
+        const toDate = new Date(to);
+
+        if (toDate <= fromDate) {
+            return res.status(400).json({
+                message: "'To' date must be greater than 'From' date."
+            });
+        }
+        // Check if the date range overlaps with any existing records
+        const conflictingIncome = await Income.findOne({
+            where: {
+                user_id: req.user.id, // Ensure only the user's records are checked
+                [Op.or]: [
+                    {
+                        from: {
+                            [Op.lte]: toDate // Existing 'from' date is less than or equal to the new 'to' date
+                        },
+                        to: {
+                            [Op.gte]: fromDate // Existing 'to' date is greater than or equal to the new 'from' date
+                        }
+                    }
+                ]
+            }
+        });
+
+        if (conflictingIncome) {
+            return res.status(409).json({
+                message: 'You already have an income between those dates'
+            });
+        }
+        const newIncome = await Income.create({
+            user_id: req.user.id,
+            from: from,
+            to:to,
+            price: price,
+            net_price:parseFloat(price)-170
+        })
+        
+        res.send(newIncome)
+
+    } catch(e) {
+        console.log(e)
+        return res.status(404).json({
+            message: 'An error occurred'
+        })
+    }
+
+})
+
+
+app.delete('/income/delete', auth, async(req,res) => {
+
+    try {
+
+        const id = req.body.id
+            
+        const income= await Income.findByPk(id)
+
+        if (!income) {
+            return res.status(404).json({ message: 'Record not found' });
+        }
+
+        await income.destroy();
+        
+        res.status(200).send()
+
+    } catch(e) {
+        console.log(e)
+        return res.status(404).json({
+            message: 'An error occurred'
+        })
+    }
+
+})
+
 
 app.listen(port, (req,res) => {
     console.log(`Server is up on ${port}`)
