@@ -12,8 +12,8 @@ if (!fs.existsSync(downloadDirectory)) {
 
 // Configure Chrome options
 const chromeOptions = new chrome.Options();
-// chromeOptions.addArguments('--headless'); // Run in headless mode
-// chromeOptions.addArguments('--disable-gpu'); // Disable GPU for headless
+chromeOptions.addArguments('--headless'); // Run in headless mode
+chromeOptions.addArguments('--disable-gpu'); // Disable GPU for headless
 chromeOptions.setUserPreferences({
     'download.default_directory': downloadDirectory,
     'download.prompt_for_download': false,

@@ -49,7 +49,7 @@
                 <td><%= income.net_price || 'Not Available' %> PLN</td> <!-- Add Net Income -->
                 <td class="text-danger"><% if(income.has_zus){%> YES<% }else{ %> NO <%}%></td>
                 <td>
-                  <button type="button" data-id="<%=income.id%>" data-from="<%=income.from%>" data-to="<%=income.to%>" data-cash="<%=income.cash%>" data-price="<%=income.price%>" class="btn btn-primary my-2 edit-income">Edit</button>
+                  <button type="button" data-zus="<%=income.has_zus%>" data-id="<%=income.id%>" data-from="<%=income.from%>" data-to="<%=income.to%>" data-cash="<%=income.cash%>" data-price="<%=income.price%>" class="btn btn-primary my-2 edit-income">Edit</button>
                   <button type="button" data-id="<%=income.id%>" class="btn btn-danger delete-button" data-bs-whatever="@mdo">Delete</button>
                 </td>
               </tr>
@@ -132,6 +132,11 @@
                     <label for="message-text" class="col-form-label">In App:</label>
                     <input required type="number" name="price" class="form-control edit-price" step="0.01" min="0">
                   </div>
+                  <div class="mb-3 form-check">
+                    <input type="checkbox" name="zus" class="form-check-input edit-zus" id="zus">
+                    <label for="priceCheckbox" class="form-check-label">I have ZUS</label>
+                  </div>
+
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

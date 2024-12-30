@@ -260,7 +260,7 @@ app.post('/income/update', auth, async(req,res) => {
 
     try {
 
-        const { id, from, to, cash, price} = req.body
+        const { id, from, to, cash, price, zus} = req.body
             
         const existingIncome = await Income.findByPk(id)
 
@@ -279,12 +279,27 @@ app.post('/income/update', auth, async(req,res) => {
             });
         }
 
+        existingIncome.net_price = parseFloat(price)-170
+
+        if(zus) {
+            existingIncome.has_zus=1
+            
+            if(req.user.age >=26) {
+                existingIncome.net_price -= 179.95
+            } else {
+                existingIncome.net_price -= 145.95
+            }
+
+        } else {
+            existingIncome.has_zus=0
+        }
+
         existingIncome.cash= cash
         existingIncome.price = price
         existingIncome.total = parseFloat(cash)+ parseFloat(price)
         existingIncome.from = from
         existingIncome.to = to
-        existingIncome.net_price = parseFloat(price)-170
+        
 
         await existingIncome.save()
         

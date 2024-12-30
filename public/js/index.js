@@ -175,6 +175,7 @@ $(document).ready(function () {
         const cash = $(this).data('cash');
         const price = $(this).data('price');
         const id = $(this).data('id');
+        const zus = $(this).data('zus');
     
         // Format dates to YYYY-MM-DD
         const from = formatDate(new Date(fromRaw));
@@ -185,6 +186,12 @@ $(document).ready(function () {
         $('.edit-cash').val(cash);
         $('.edit-price').val(price);
         $('.update-income-id').val(id)
+
+        if (zus) {
+            $('.edit-zus').prop('checked', true);
+        } else {
+            $('.edit-zus').prop('checked', false);
+        }
     
         $('#editIncomeModal').modal('show');
     });
