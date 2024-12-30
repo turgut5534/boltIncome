@@ -381,7 +381,10 @@ app.post('/income/save', auth, async(req,res) => {
             has_zus: has_zus
         })
         
-        res.send(newIncome)
+        res.json({
+            income: newIncome,
+            user: req.user
+        })
 
     } catch(e) {
         console.log(e)

@@ -67,29 +67,35 @@ $(document).ready(function () {
             data: $(this).serialize(),
             success: function(response) {
 
-                const formattedTo = formatDateToDot(response.to)
-                const formattedFrom = formatDateToDot(response.from)
+                console.log(response)
 
-                var zus = 'NO';
+                const formattedTo = formatDateToDot(response.income.to)
+                const formattedFrom = formatDateToDot(response.income.from)
 
-                if(response.has_zus) {
-                    zus= 'YES'
+                var zus = 0
+
+                if(response.income.has_zus) {
+                    if(response.user.age && response.user.age >=26) {
+                        zus = 179.95
+                    }else {
+                        zus = 145.95
+                    }
                 }
 
-                $('.incomes').append(`<tr id="income-${response.id}">
-                <td>
+                $('.incomes').append(`<tr id="income-${response.income.id}">
+                <td class="fw-bold">
                   ${formattedTo}
                   -
                   ${formattedFrom}
                 </td>
-                <td>${response.total} PLN</td>
-                <td>${response.cash} PLN</td>
-                <td>${response.price} PLN</td>
-                <td>${response.net_price} PLN</td>
-                <td class="text-danger">${zus}</td>
+                <td class="fw-bold">${response.income.total} PLN</td>
+                <td class="fw-bold text-success">${response.income.cash} PLN</td>
+                <td class="fw-bold text-danger">${response.income.price} PLN</td>
+                <td class="text-danger fw-bold">${zus} PLN</td>
+                <td class="fw-bold text-primary">+${response.income.net_price} PLN</td>
                 <td>
-                  <button type="button" data-id="${response.id}" data-from="${response.from}" data-to="${response.to}" data-price="${response.price}" class="btn btn-primary my-2 edit-income">Edit</button>
-                  <button type="button" data-id="${response.id}" class="btn btn-danger delete-button" data-bs-whatever="@mdo">Delete</button>
+                  <button type="button" data-id="${response.income.id}" data-from="${response.income.from}" data-to="${response.income.to}" data-price="${response.income.price}" class="btn btn-primary my-2 edit-income">Edit</button>
+                  <button type="button" data-id="${response.income.id}" class="btn btn-danger delete-button" data-bs-whatever="@mdo">Delete</button>
                 </td>
               </tr>`)
               $('#exampleModal').modal('hide')

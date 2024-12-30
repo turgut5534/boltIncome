@@ -21,8 +21,8 @@
             <th>Total</th>
             <th><i class="fa-solid fa-dollar-sign text-success"></i> Cash</th>
             <th><i class="fa-regular fa-credit-card"></i> In App</th>
-            <th>To Santander</th>
             <th>ZUS</th>
+            <th>To Santander</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -30,7 +30,7 @@
           <% if(incomes.length > 0) { %>
             <% incomes.forEach((income) => { %>
               <tr id="income-<%= income.id %>">
-                <td>
+                <td class="fw-bold">
                   <%= new Date(income.from).toLocaleDateString('pl-PL', {
                     day: '2-digit',
                     month: '2-digit',
@@ -43,11 +43,11 @@
                     year: 'numeric'
                   }) %>
                 </td>
-                <td class="text-primary"><%= income.total %> PLN</td>
-                <td class="text-success"><%= income.cash %> PLN</td>
-                <td class="text-danger"><%= income.price %> PLN</td>
-                <td><%= income.net_price || 'Not Available' %> PLN</td> <!-- Add Net Income -->
-                <td class="text-danger"><% if(income.has_zus){%> YES<% }else{ %> NO <%}%></td>
+                <td class="fw-bold"><%= income.total %> PLN</td>
+                <td class="text-success fw-bold"><%= income.cash %> PLN</td>
+                <td class="text-danger fw-bold"><%= income.price %> PLN</td>
+                <td class="fw-bold"><% if(income.has_zus){%><span class="text-danger"><%if (user.age && user.age >=26){%>179.95<%}else{%>145.95<%}%></span><% }else{ %><span class="text-success">0 PLN</span><%}%></td>
+                <td class="fw-bold text-primary">+<%= income.net_price || 'Not Available' %> PLN</td> <!-- Add Net Income -->    
                 <td>
                   <button type="button" data-zus="<%=income.has_zus%>" data-id="<%=income.id%>" data-from="<%=income.from%>" data-to="<%=income.to%>" data-cash="<%=income.cash%>" data-price="<%=income.price%>" class="btn btn-primary my-2 edit-income">Edit</button>
                   <button type="button" data-id="<%=income.id%>" class="btn btn-danger delete-button" data-bs-whatever="@mdo">Delete</button>
@@ -134,7 +134,7 @@
                   </div>
                   <div class="mb-3 form-check">
                     <input type="checkbox" name="zus" class="form-check-input edit-zus" id="zus">
-                    <label for="priceCheckbox" class="form-check-label">I have ZUS</label>
+                    <label for="zus" class="form-check-label">I have ZUS</label>
                   </div>
 
                 </div>
