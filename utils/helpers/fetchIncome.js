@@ -1,4 +1,4 @@
-const { Builder, By } = require('selenium-webdriver');
+const { Builder, By, until } = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
 const fs = require('fs');
 const path = require('path');
@@ -89,20 +89,19 @@ async function automateBoltLogin(username,password) {
 
         const submitButton1 = await driver.findElement(By.css('button[type="submit"]'));
         await submitButton1.click();
-        await driver.sleep(1000);
 
         // Fill in password and submit
+        await driver.wait(until.elementLocated(By.id('password')), 10000); // Wait up to 10 seconds
         const passwordField = await driver.findElement(By.id('password'));
         await passwordField.sendKeys(password);
 
         const submitButton2 = await driver.findElement(By.css('button[type="submit"]'));
         await submitButton2.click();
-        await driver.sleep(10000);
 
         // Navigate to balance reports
+        await driver.wait(until.elementLocated(By.css('a[href="/balance-reports"]')), 10000); // Wait up to 10 seconds
         const balanceReportLink = await driver.findElement(By.css('a[href="/balance-reports"]'));
         await balanceReportLink.click();
-        await driver.sleep(3000);
 
         // Calculate the previous week
         var previousDate = getPreviousYearAndWeek()
