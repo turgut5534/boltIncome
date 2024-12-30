@@ -73,6 +73,7 @@ $(document).ready(function () {
                 const formattedFrom = formatDateToDot(response.income.from)
 
                 var zus = 0
+                var file = 'No file'
 
                 if(response.income.has_zus) {
                     if(response.user.age && response.user.age >=26) {
@@ -80,6 +81,10 @@ $(document).ready(function () {
                     }else {
                         zus = 145.95
                     }
+                }
+
+                if(response.income.file) {
+                    file = `<a class="nav-link" target="_blank" href="/${response.file}">View</a>`
                 }
 
                 $('.incomes').append(`<tr id="income-${response.income.id}">
@@ -91,8 +96,9 @@ $(document).ready(function () {
                 <td class="fw-bold">${response.income.total} PLN</td>
                 <td class="fw-bold text-success">${response.income.cash} PLN</td>
                 <td class="fw-bold text-danger">${response.income.price} PLN</td>
-                <td class="text-danger fw-bold">${zus} PLN</td>
+                <td class="fw-bold${zus == 0 ? "text-success" : "text-danger"} " fw-bold">${zus} PLN</td>
                 <td class="fw-bold text-primary">+${response.income.net_price} PLN</td>
+                <td>${file}</td>
                 <td>
                   <button type="button" data-id="${response.income.id}" data-from="${response.income.from}" data-to="${response.income.to}" data-price="${response.income.price}" class="btn btn-primary my-2 edit-income">Edit</button>
                   <button type="button" data-id="${response.income.id}" class="btn btn-danger delete-button" data-bs-whatever="@mdo">Delete</button>

@@ -23,6 +23,7 @@
             <th><i class="fa-regular fa-credit-card"></i> In App</th>
             <th>ZUS</th>
             <th>To Santander</th>
+            <th>File</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -48,6 +49,11 @@
                 <td class="text-danger fw-bold"><%= income.price %> PLN</td>
                 <td class="fw-bold"><% if(income.has_zus){%><span class="text-danger"><%if (user.age && user.age >=26){%>179.95<%}else{%>145.95<%}%></span><% }else{ %><span class="text-success">0 PLN</span><%}%></td>
                 <td class="fw-bold text-primary">+<%= income.net_price || 'Not Available' %> PLN</td> <!-- Add Net Income -->    
+                <td><%if(income.file){%>
+                  <a class="nav-link" target="_blank" href="/<%=income.file%>">View</a>
+                  <%}else{%>
+                    No file 
+                  <%}%></td>
                 <td>
                   <button type="button" data-zus="<%=income.has_zus%>" data-id="<%=income.id%>" data-from="<%=income.from%>" data-to="<%=income.to%>" data-cash="<%=income.cash%>" data-price="<%=income.price%>" class="btn btn-primary my-2 edit-income">Edit</button>
                   <button type="button" data-id="<%=income.id%>" class="btn btn-danger delete-button" data-bs-whatever="@mdo">Delete</button>
