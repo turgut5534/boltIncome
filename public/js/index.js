@@ -8,7 +8,7 @@ $(document).ready(function () {
         const button = $(this); // Reference the button
 
         Swal.fire({
-            title: "Enter your password",
+            title: "Enter your Bolt Driver password",
             input: "password",
             inputAttributes: {
                 autocapitalize: "off"
