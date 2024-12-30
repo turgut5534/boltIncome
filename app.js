@@ -227,7 +227,7 @@ app.post('/get-income', auth, async(req,res) => {
 
             const checkRecord = await Income.findOne({
                 where: {
-                    week: data.week
+                    from: data.from
                 }
             });
 
@@ -237,7 +237,10 @@ app.post('/get-income', auth, async(req,res) => {
 
             const newIncome = await Income.create({
                 user_id: req.user.id,
-                week: data.week,
+                cash: data.cash,
+                total: data.total,
+                from: data.from,
+                to: data.to,
                 price: data.price,
                 net_price: data.net_price,
                 file: data.file

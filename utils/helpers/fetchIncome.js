@@ -12,8 +12,8 @@ if (!fs.existsSync(downloadDirectory)) {
 
 // Configure Chrome options
 const chromeOptions = new chrome.Options();
-chromeOptions.addArguments('--headless'); // Run in headless mode
-chromeOptions.addArguments('--disable-gpu'); // Disable GPU for headless
+// chromeOptions.addArguments('--headless'); // Run in headless mode
+// chromeOptions.addArguments('--disable-gpu'); // Disable GPU for headless
 chromeOptions.setUserPreferences({
     'download.default_directory': downloadDirectory,
     'download.prompt_for_download': false,
@@ -21,18 +21,34 @@ chromeOptions.setUserPreferences({
     'safebrowsing.enabled': true,
 });
 
-function getCurrentYearAndWeek() {
-    const date = new Date(); // Get the current date
-    const target = new Date(date.valueOf());
-    const dayNumber = (date.getDay() + 6) % 7; // ISO week starts on Monday
-    target.setDate(target.getDate() - dayNumber + 3); // Move to nearest Thursday
-    const year = target.getFullYear();
+function getPreviousYearAndWeek() {
+    const today = new Date();
+    
+    // Calculate the current week's year and number
+    const currentYear = today.getFullYear();
+    const currentWeek = getWeekNumber(today);
 
-    const firstThursday = new Date(year, 0, 4); // The 4th of January is always in the first ISO week
-    const diff = target - firstThursday;
-    const week = 1 + Math.floor(diff / (7 * 24 * 60 * 60 * 1000)); // Calculate the ISO week number
+    let prevYear = currentYear;
+    let prevWeek = currentWeek - 1;
 
-    return { year, week };
+    // If it's the first week of the year, go to the last week of the previous year
+    if (prevWeek === 0) {
+        prevYear = currentYear - 1;
+        prevWeek = getTotalWeeksInYear(prevYear);
+    }
+
+    return { year: prevYear, week: prevWeek };
+}
+
+function getWeekNumber(date) {
+    const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
+    const dayOfYear = Math.floor((date - firstDayOfYear + 86400000) / 86400000); // Include the current day
+    return Math.ceil((dayOfYear + firstDayOfYear.getDay() - 1) / 7);
+}
+
+function getTotalWeeksInYear(year) {
+    const lastDayOfYear = new Date(year, 11, 31); // December 31st
+    return getWeekNumber(lastDayOfYear);
 }
 
 function decrementWeek(year, week) {
@@ -81,7 +97,7 @@ async function automateBoltLogin(username,password) {
 
         const submitButton2 = await driver.findElement(By.css('button[type="submit"]'));
         await submitButton2.click();
-        await driver.sleep(2000);
+        await driver.sleep(10000);
 
         // Navigate to balance reports
         const balanceReportLink = await driver.findElement(By.css('a[href="/balance-reports"]'));
@@ -89,8 +105,7 @@ async function automateBoltLogin(username,password) {
         await driver.sleep(3000);
 
         // Calculate the previous week
-        const currentDate = getCurrentYearAndWeek()
-        var previousDate = decrementWeek(currentDate.year, currentDate.week)
+        var previousDate = getPreviousYearAndWeek()
 
         var continueDownload = true
 
@@ -138,18 +153,45 @@ async function automateBoltLogin(username,password) {
 
                 const data = {
                     price : 0,
+                    cash: 0,
+                    total: 0,
                     from :null,
                     to: null,
                     net_price:0,
-                    file: ''
+                    file: '',
+                    has_zus: 0
                 }
 
                 const firstPageText = pdfData.text.split('\n'); // Split lines from the entire text
                 const balance = firstPageText.find(line => line.includes('Weekly Balance'))?.trim();
-                data.price = parseFloat(balance.match(/(\d+\.\d+)/)?.[0])
+                const inApp = parseFloat(balance.match(/(\d+\.\d+)/)?.[0])
+                data.price = inApp
                 data.net_price = data.price-170
-                data.week= firstPageText.find(line => line.includes('Week'))?.trim();
+                var cash = 0
+
+                try {
+                    const cashLine = firstPageText.find(line => line.includes('Cash Trips'))?.trim();
+                    cash = parseFloat(cashLine.match(/[\d,.]+\s*ZŁ/));
+                    data.cash = cash
+                } catch(e) {
+                    console.log('No cash found')
+                }
+
+                data.total = cash ? cash+inApp: inApp
                 data.file = newFileName
+
+                const dateLine = firstPageText.find(line => line.includes('Week'))?.trim();
+
+                const dateFromStr = dateLine.match(/\d{2}\.\d{2}\.\d{4}/)?.[0];
+                const [dayFrom, monthFrom, yearFrom] = dateFromStr.split('.');
+                const dateFrom = new Date(`${yearFrom}-${monthFrom}-${dayFrom}`);
+
+                const dateToStr = dateLine.match(/\d{2}\.\d{2}\.\d{4}/g);
+                const [dayTo, monthTo, yearTo] = dateToStr[1].split('.');
+                const dateTo = new Date(`${yearTo}-${monthTo}-${dayTo}`);
+
+                data.from = dateFrom
+                data.to = dateTo
 
                 allData.push(data)
 
