@@ -14,6 +14,9 @@ if (!fs.existsSync(downloadDirectory)) {
 const chromeOptions = new chrome.Options();
 chromeOptions.addArguments('--headless'); // Run in headless mode
 chromeOptions.addArguments('--disable-gpu'); // Disable GPU for headless
+chromeOptions.addArguments('--no-sandbox');
+chromeOptions.addArguments('--disable-dev-shm-usage');
+chromeOptions.addArguments('--remote-debugging-port=9222');
 chromeOptions.setUserPreferences({
     'download.default_directory': downloadDirectory,
     'download.prompt_for_download': false,
