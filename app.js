@@ -421,6 +421,23 @@ app.delete('/income/delete', auth, async(req,res) => {
 
 })
 
+app.post('/users/age', auth, async(req,res) => {
+
+    try {
+
+        const userAge = await req.user.age
+
+        if(!userAge ) {
+            return res.status(400).send()
+        }
+        res.send()
+
+    } catch(e) {
+        console.log(e)
+    }
+
+})
+
 
 app.listen(port, (req,res) => {
     console.log(`Server is up on ${port}`)
